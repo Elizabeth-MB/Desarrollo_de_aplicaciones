@@ -8,11 +8,9 @@ import {
   Pressable,
   StyleSheet,
   FlatList,
-  // TouchableOpacity,
-  // Modal,
 } from "react-native";
-// import Usuario from "./src/components/Usuario";
 import cartLogo from "./assets/cart.png";
+import trashLogo from "./assets/bote-de-basura(1).png";
 import { useState } from "react";
 import RemoveModal from "./src/components/RemoveModal";
 
@@ -40,8 +38,6 @@ export default function App() {
   const [modalVisible, setModalVisible] = useState(false);
   const [itemSelected, setItemSelected] = useState(null);
 
-  const handleAddCounter = () => setCounter(counter + 1);
-
   const handleInputChange = (value) => setInputValue(value);
 
   const handleModal = (id) => {
@@ -50,122 +46,64 @@ export default function App() {
     console.log(id);
   };
 
-  // console.log({counter});
-  /* console.warn('This is a warning');
-  console.error('This component is deprecated');
-   */
   const addItem = () => {
     const newItem = {
       name: inputValue,
       id: new Date().getTime(),
     };
-    //
     setCartItems([...cartItems, newItem]);
   };
-
-  /* const removeItem = () => {
-    const filteredArray = cartItems.filter((item)=> item.id !== itemSelected);
-    setCartItems(filteredArray);
-    setModalVisible(false)
-  }
- */
-  /*   const RemoveModal = () => {
-    return (
-      <Modal
-        animationType="slide"
-        transparent
-        visible={modalVisible}
-        onRequestClose
-      >
-        <View style={styles.modalContainer}>
-          <Text>Do you want to delete this product?</Text>
-          <Pressable onPress={removeItem}>
-            <Text>OK</Text>
-          </Pressable>
-          <Pressable onPress={() => setModalVisible(false)}>
-            <Text>Cancel</Text>
-          </Pressable>
-        </View>
-      </Modal>
-    );
-  }; */
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto"></StatusBar>
       <RemoveModal
-      modalVisible={modalVisible}
-      cartItems={cartItems}
-      setCartItems={setCartItems}
-      setModalVisible={setModalVisible}
-      itemSelected={itemSelected}
+        modalVisible={modalVisible}
+        cartItems={cartItems}
+        setCartItems={setCartItems}
+        setModalVisible={setModalVisible}
+        itemSelected={itemSelected}
       ></RemoveModal>
-      <View
-        style={styles.header}>
-        <Text>MI CARRITO</Text>
-        {/* <Image style={{width: 50, height: 50}} source={{uri: "https://purepng.com/public/uploads/large/purepng.com-shopping-cartshoppingcarttrolleycarriagebuggysupermarkets-1421526532320cblq3.png"}}></Image> */}
-        <Image style={styles.image} source={cartLogo}></Image>
+      <View style={styles.header}>
+        <Text style={styles.header}>TASKS</Text>
+        {/* <Image style={styles.image} source={cartLogo}></Image> */}
       </View>
-      
+
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Ingrese un producto"
+          placeholder="Add a new task"
           onChangeText={handleInputChange}
           value={inputValue}
         ></TextInput>
-        {/* <TouchableOpacity>
-          <Text style={{ fontSize: 40 }}>+</Text>
-        </TouchableOpacity> */}
-
         <Pressable onPress={addItem}>
-          <Text style={{ fontSize: 40 }}>+</Text>
+          <Text style={styles.buttons}>+</Text>
         </Pressable>
       </View>
 
       <View style={styles.productList}>
-        {/* {DATA.map((item)=> (
-          <View key={item.id}>
-            <Text style={styles.product}>{item.name}</Text>
-          </View>
-        ))} */}
-        {/* <FlatList
-          data={DATA}
-          renderItem={({ item }) => (
-            <View style={{ width: 400 }}>
-              <Text style={styles.product}>{item.name}</Text>
-            </View>
-          )}
-          keyExtractor={(item) => item.id}
-        ></FlatList> */}
-
         <FlatList
           data={cartItems}
           renderItem={({ item }) => (
             <View style={{ width: 400, flexDirection: "row" }}>
               <Text style={styles.product}>{item.name}</Text>
               <Pressable onPress={() => handleModal(item.id)}>
-                <Text style={{ fontSize: 20, color: "red" }}>Delete❌</Text>
+                <Text style={{ fontSize: 20, color: "red" }}>
+                <Image source={trashLogo} style={styles.trashImage} alt="Delete Task"></Image>
+                </Text>
               </Pressable>
             </View>
           )}
           keyExtractor={(item) => item.id}
         ></FlatList>
       </View>
-
-      {/* <Pressable onPress={()=> setCounter(counter + 1)}> */}
-
-      {/* <Pressable onPress={handleAddCounter}>
-        <Text style={{ fontSize: 20 }}>{counter}</Text>
-      </Pressable>
-      <Text>Valor del input: 56:54 {inputValue}</Text> */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#feaafe",
+    backgroundColor: "#d0fef5",
     flex: 1,
     paddingHorizontal: 14,
     paddingTop: Constants.statusBarHeight,
@@ -187,14 +125,29 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     gap: 8,
-    alignItems: 'center',
+    alignItems: "center",
+    paddingVertical: 10,
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#44344f'
   },
   image: {
     width: 50,
     height: 50,
+  },
+  trashImage: {
+    width: 20,
+    height: 20,
+    color: 'red',
+  },
+  buttons: {
+    color: '#44344f',
+    fontSize: 40,
+    fontWeight: 'bold',
+    paddingHorizontal: 10,
   },
   productList: {
     justifyContent: "center",
@@ -207,14 +160,14 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   input: {
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    width: '90%',
+    width: "90%",
   },
   inputContainer: {
-    flexDirection: 'row'
-  }
+    flexDirection: "row",
+  },
 });

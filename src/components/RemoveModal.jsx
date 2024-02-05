@@ -20,7 +20,7 @@ const RemoveModal = ({
             visible={modalVisible}
         >
             <View style={styles.modalContainer}>
-                <Text>Do you want to delete this product?</Text>
+                <Text>Do you want to delete this task from list?</Text>
                 <Pressable onPress={removeItem}>
                     <Text>OK</Text>
                 </Pressable>
