@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+import Constants from "expo-constants";
 import {
   Text,
   View,
@@ -7,12 +8,13 @@ import {
   Pressable,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
-  Modal,
+  // TouchableOpacity,
+  // Modal,
 } from "react-native";
-import Usuario from "./src/components/Usuario";
+// import Usuario from "./src/components/Usuario";
 import cartLogo from "./assets/cart.png";
 import { useState } from "react";
+import RemoveModal from "./src/components/RemoveModal";
 
 const DATA = [
   {
@@ -27,118 +29,6 @@ const DATA = [
     name: "Gorra",
     id: 3,
   },
-  /* {
-    name: "Camisa",
-    id: 4,
-  },
-  {
-    name: "Sudadera",
-    id: 5,
-  },
-  {
-    name: "Gorra",
-    id: 6,
-  },
-  {
-    name: "Camisa",
-    id: 7,
-  },
-  {
-    name: "Sudadera",
-    id: 8,
-  },
-  {
-    name: "Gorra",
-    id: 9,
-  },
-  {
-    name: "Camisa",
-    id: 10,
-  },
-  {
-    name: "Sudadera",
-    id: 11,
-  },
-  {
-    name: "Camisa",
-    id: 12,
-  },
-  {
-    name: "Sudadera",
-    id: 13,
-  },
-  {
-    name: "Gorra",
-    id: 14,
-  },
-  {
-    name: "Camisa",
-    id: 15,
-  },
-  {
-    name: "Sudadera",
-    id: 16,
-  },
-  {
-    name: "Camisa",
-    id: 17,
-  },
-  {
-    name: "Sudadera",
-    id: 18,
-  },
-  {
-    name: "Gorra",
-    id: 19,
-  },
-  {
-    name: "Camisa",
-    id: 20,
-  },
-  {
-    name: "Sudadera",
-    id: 21,
-  },
-  {
-    name: "Camisa",
-    id: 22,
-  },
-  {
-    name: "Sudadera",
-    id: 23,
-  },
-  {
-    name: "Gorra",
-    id: 24,
-  },
-  {
-    name: "Camisa",
-    id: 25,
-  },
-  {
-    name: "Sudadera",
-    id: 26,
-  },
-  {
-    name: "Camisa",
-    id: 27,
-  },
-  {
-    name: "Sudadera",
-    id: 28,
-  },
-  {
-    name: "Gorra",
-    id: 29,
-  },
-  {
-    name: "Camisa",
-    id: 30,
-  },
-  {
-    name: "Sudadera",
-    id: 31,
-  }, */
 ];
 
 export default function App() {
@@ -147,11 +37,23 @@ export default function App() {
   const [counter, setCounter] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [cartItems, setCartItems] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [itemSelected, setItemSelected] = useState(null);
 
   const handleAddCounter = () => setCounter(counter + 1);
 
   const handleInputChange = (value) => setInputValue(value);
 
+  const handleModal = (id) => {
+    setModalVisible(true);
+    setItemSelected(id);
+    console.log(id);
+  };
+
+  // console.log({counter});
+  /* console.warn('This is a warning');
+  console.error('This component is deprecated');
+   */
   const addItem = () => {
     const newItem = {
       name: inputValue,
@@ -161,31 +63,53 @@ export default function App() {
     setCartItems([...cartItems, newItem]);
   };
 
+  /* const removeItem = () => {
+    const filteredArray = cartItems.filter((item)=> item.id !== itemSelected);
+    setCartItems(filteredArray);
+    setModalVisible(false)
+  }
+ */
+  /*   const RemoveModal = () => {
+    return (
+      <Modal
+        animationType="slide"
+        transparent
+        visible={modalVisible}
+        onRequestClose
+      >
+        <View style={styles.modalContainer}>
+          <Text>Do you want to delete this product?</Text>
+          <Pressable onPress={removeItem}>
+            <Text>OK</Text>
+          </Pressable>
+          <Pressable onPress={() => setModalVisible(false)}>
+            <Text>Cancel</Text>
+          </Pressable>
+        </View>
+      </Modal>
+    );
+  }; */
+
   return (
     <View style={styles.container}>
+      <StatusBar style="auto"></StatusBar>
+      <RemoveModal
+      modalVisible={modalVisible}
+      cartItems={cartItems}
+      setCartItems={setCartItems}
+      setModalVisible={setModalVisible}
+      itemSelected={itemSelected}
+      ></RemoveModal>
       <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          gap: 8,
-          alignItems: "center",
-        }}
-      >
+        style={styles.header}>
         <Text>MI CARRITO</Text>
         {/* <Image style={{width: 50, height: 50}} source={{uri: "https://purepng.com/public/uploads/large/purepng.com-shopping-cartshoppingcarttrolleycarriagebuggysupermarkets-1421526532320cblq3.png"}}></Image> */}
-        <Image style={{ width: 50, height: 50 }} source={cartLogo}></Image>
+        <Image style={styles.image} source={cartLogo}></Image>
       </View>
-
-      <View style={{ flexDirection: "row" }}>
+      
+      <View style={styles.inputContainer}>
         <TextInput
-          style={{
-            borderColor: "gray",
-            borderWidth: 1,
-            paddingHorizontal: 20,
-            paddingVertical: 10,
-            borderRadius: 5,
-            width: "90%",
-          }}
+          style={styles.input}
           placeholder="Ingrese un producto"
           onChangeText={handleInputChange}
           value={inputValue}
@@ -218,8 +142,11 @@ export default function App() {
         <FlatList
           data={cartItems}
           renderItem={({ item }) => (
-            <View style={{ width: 400 }}>
+            <View style={{ width: 400, flexDirection: "row" }}>
               <Text style={styles.product}>{item.name}</Text>
+              <Pressable onPress={() => handleModal(item.id)}>
+                <Text style={{ fontSize: 20, color: "red" }}>Delete❌</Text>
+              </Pressable>
             </View>
           )}
           keyExtractor={(item) => item.id}
@@ -228,19 +155,46 @@ export default function App() {
 
       {/* <Pressable onPress={()=> setCounter(counter + 1)}> */}
 
-      <Pressable onPress={handleAddCounter}>
+      {/* <Pressable onPress={handleAddCounter}>
         <Text style={{ fontSize: 20 }}>{counter}</Text>
       </Pressable>
-      <Text>Valor del input: 1:28: {inputValue}</Text>
+      <Text>Valor del input: 56:54 {inputValue}</Text> */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fefefe",
+    backgroundColor: "#feaafe",
     flex: 1,
     paddingHorizontal: 14,
+    paddingTop: Constants.statusBarHeight,
+  },
+  modalContainer: {
+    height: 200,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 8,
+    alignItems: 'center',
+  },
+  image: {
+    width: 50,
+    height: 50,
   },
   productList: {
     justifyContent: "center",
@@ -252,4 +206,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     padding: 4,
   },
+  input: {
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    width: '90%',
+  },
+  inputContainer: {
+    flexDirection: 'row'
+  }
 });
